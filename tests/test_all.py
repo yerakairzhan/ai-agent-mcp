@@ -31,12 +31,9 @@ class TestAPI:
     """Test FastAPI endpoints"""
 
     def test_root_endpoint(self, client):
-        """Test root endpoint returns API info"""
         response = client.get("/")
         assert response.status_code == 200
-        data = response.json()
-        assert "message" in data
-        assert data["version"] == "1.0.0"
+        assert "text/html" in response.headers["content-type"]
 
     def test_health_endpoint(self, client):
         """Test health check endpoint"""
