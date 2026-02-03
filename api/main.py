@@ -9,6 +9,8 @@ import sys
 import os
 import logging
 
+from starlette.responses import HTMLResponse
+
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -60,22 +62,22 @@ async def startup_event():
 
 @app.get("/")
 async def root():
-    """Root endpoint with API information"""
-    return {
-        "message": "AI Agent MCP API",
-        "version": "1.0.0",
-        "endpoints": {
-            "health": "/health",
-            "agent_query": "/api/v1/agent/query",
-            "docs": "/docs"
-        },
-        "features": [
-            "FastMCP integration (Product + Order servers)",
-            "LangGraph agent with custom tools",
-            "SQLite persistence",
-            "Docker support"
-        ]
-    }
+    """Serve the frontend interface"""
+    try:
+        with open("frontend/index.html", "r") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse("""
+           <!DOCTYPE html>
+           <html>
+           <head><title>AI Agent MCP</title></head>
+           <body>
+               <h1>AI Agent MCP API</h1>
+               <p>Frontend not found. API is running at /api/v1/agent/query</p>
+               <p>Documentation: <a href="/docs">/docs</a></p>
+           </body>
+           </html>
+           """)
 
 
 @app.get("/health")

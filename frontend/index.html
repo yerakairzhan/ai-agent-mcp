@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Agent MCP - Product & Order Management</title>
+    <title>AI Agent MCP</title>
     <style>
         * {
             margin: 0;
@@ -20,140 +20,91 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
         header {
             text-align: center;
-            padding: 30px 20px;
+            padding: 25px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            margin-bottom: 30px;
-            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            margin-bottom: 25px;
         }
 
         h1 {
             color: #64ffda;
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 2em;
+            margin-bottom: 8px;
         }
 
         .subtitle {
             color: #a0a0a0;
-            font-size: 1.1em;
+            font-size: 0.95em;
         }
 
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
-
-        .tab-btn {
-            flex: 1;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid transparent;
-            border-radius: 10px;
-            color: #e0e0e0;
-            cursor: pointer;
-            font-size: 1em;
-            transition: all 0.3s ease;
-        }
-
-        .tab-btn:hover {
-            background: rgba(100, 255, 218, 0.1);
-            border-color: #64ffda;
-        }
-
-        .tab-btn.active {
-            background: rgba(100, 255, 218, 0.2);
-            border-color: #64ffda;
-            color: #64ffda;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .info-section {
+        .section {
             background: rgba(255, 255, 255, 0.05);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
         }
 
-        .info-section h2 {
+        .section h2 {
             color: #64ffda;
+            font-size: 1.3em;
             margin-bottom: 15px;
-            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .info-section p {
-            line-height: 1.6;
-            color: #b0b0b0;
-            margin-bottom: 15px;
-        }
-
-        .samples {
+        .queries-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .sample-query {
+        .query-btn {
             background: rgba(100, 255, 218, 0.1);
-            padding: 12px 15px;
-            border-radius: 8px;
+            padding: 10px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             border: 1px solid rgba(100, 255, 218, 0.3);
+            text-align: left;
+            font-size: 0.9em;
         }
 
-        .sample-query:hover {
+        .query-btn:hover {
             background: rgba(100, 255, 218, 0.2);
-            transform: translateY(-2px);
+            transform: translateX(3px);
         }
 
-        .sample-query code {
+        .query-btn code {
             color: #64ffda;
             font-family: 'Courier New', monospace;
+            font-size: 0.85em;
         }
 
         .query-interface {
             background: rgba(255, 255, 255, 0.05);
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-        }
-
-        .input-group {
+            padding: 25px;
+            border-radius: 12px;
             margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 10px;
-            color: #64ffda;
-            font-weight: 600;
         }
 
         .query-input {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background: rgba(0, 0, 0, 0.3);
             border: 2px solid rgba(100, 255, 218, 0.3);
-            border-radius: 10px;
+            border-radius: 8px;
             color: #e0e0e0;
-            font-size: 1em;
+            font-size: 0.95em;
             font-family: 'Courier New', monospace;
-            transition: border-color 0.3s ease;
+            margin-bottom: 12px;
         }
 
         .query-input:focus {
@@ -163,20 +114,20 @@
 
         .btn-submit {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             background: linear-gradient(135deg, #64ffda 0%, #4ecdc4 100%);
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             color: #1a1a2e;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(100, 255, 218, 0.4);
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.4);
         }
 
         .btn-submit:disabled {
@@ -184,136 +135,36 @@
             cursor: not-allowed;
         }
 
-        .response-section {
+        .response {
             background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 10px;
-            border-left: 4px solid #64ffda;
-            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #64ffda;
+            margin-top: 15px;
             display: none;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
         }
 
-        .response-section.show {
+        .response.show {
             display: block;
         }
 
-        .response-header {
-            color: #64ffda;
-            font-weight: 600;
-            margin-bottom: 10px;
+        .response.error {
+            border-left-color: #f44336;
+            color: #ff5252;
         }
 
-        .response-content {
-            color: #e0e0e0;
-            font-family: 'Courier New', monospace;
-            white-space: pre-wrap;
-            line-height: 1.6;
-        }
-
-        .table-container {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 25px;
-            border-radius: 15px;
-            overflow-x: auto;
-            margin-bottom: 20px;
-        }
-
-        .table-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .table-header h2 {
-            color: #64ffda;
-        }
-
-        .btn-refresh {
-            padding: 10px 20px;
-            background: rgba(100, 255, 218, 0.2);
-            border: 1px solid #64ffda;
-            border-radius: 8px;
-            color: #64ffda;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-refresh:hover {
-            background: rgba(100, 255, 218, 0.3);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background: rgba(100, 255, 218, 0.1);
-            padding: 12px;
-            text-align: left;
-            color: #64ffda;
-            font-weight: 600;
-            border-bottom: 2px solid #64ffda;
-        }
-
-        td {
-            padding: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: #e0e0e0;
-        }
-
-        tr:hover {
-            background: rgba(100, 255, 218, 0.05);
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
+        .category {
             font-size: 0.85em;
-            font-weight: 600;
-        }
-
-        .badge.in-stock {
-            background: rgba(76, 175, 80, 0.3);
-            color: #4caf50;
-        }
-
-        .badge.out-stock {
-            background: rgba(244, 67, 54, 0.3);
-            color: #f44336;
-        }
-
-        .badge.pending {
-            background: rgba(255, 193, 7, 0.3);
-            color: #ffc107;
-        }
-
-        .badge.completed {
-            background: rgba(76, 175, 80, 0.3);
-            color: #4caf50;
-        }
-
-        .badge.cancelled {
-            background: rgba(158, 158, 158, 0.3);
-            color: #9e9e9e;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #64ffda;
+            color: #888;
+            margin-bottom: 8px;
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2em;
-            }
-            .tabs {
-                flex-direction: column;
-            }
-            .samples {
+            .queries-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -323,105 +174,103 @@
     <div class="container">
         <header>
             <h1>🤖 AI Agent MCP</h1>
-            <p class="subtitle">Product & Order Management System</p>
+            <p class="subtitle">Natural Language Product & Order Management</p>
         </header>
 
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('query')">Query Interface</button>
-            <button class="tab-btn" onclick="switchTab('database')">Database View</button>
-            <button class="tab-btn" onclick="switchTab('info')">About</button>
+        <!-- Query Interface -->
+        <div class="query-interface">
+            <input
+                type="text"
+                id="queryInput"
+                class="query-input"
+                placeholder="Type your query or click a sample below..."
+                onkeypress="if(event.key==='Enter') submitQuery()"
+            >
+            <button class="btn-submit" onclick="submitQuery()" id="submitBtn">Send Query</button>
+            <div class="response" id="response"></div>
         </div>
 
-        <!-- Query Tab -->
-        <div id="query-tab" class="tab-content active">
-            <div class="info-section">
-                <h2>📝 Sample Queries</h2>
-                <p>Click on any sample query below to try it out:</p>
-                <div class="samples">
-                    <div class="sample-query" onclick="useQuery('list all products')">
-                        <code>list all products</code>
-                    </div>
-                    <div class="sample-query" onclick="useQuery('what is the average price?')">
-                        <code>what is the average price?</code>
-                    </div>
-                    <div class="sample-query" onclick="useQuery('show products in Electronics category')">
-                        <code>show Electronics products</code>
-                    </div>
-                    <div class="sample-query" onclick="useQuery('add product: Webcam, price: 89.99, category: Electronics')">
-                        <code>add product: Webcam, price: 89.99</code>
-                    </div>
-                    <div class="sample-query" onclick="useQuery('create order for product_id: 1, quantity: 2')">
-                        <code>create order for product 1</code>
-                    </div>
-                    <div class="sample-query" onclick="useQuery('list all pending orders')">
-                        <code>list pending orders</code>
-                    </div>
-                    <div class="sample-query" onclick="useQuery('get order statistics')">
-                        <code>order statistics</code>
-                    </div>
-                    <div class="sample-query" onclick="useQuery('apply 15% discount to price: 100')">
-                        <code>apply 15% discount to 100</code>
-                    </div>
+        <!-- Product Queries -->
+        <div class="section">
+            <h2>📦 Product Queries</h2>
+            <div class="category">Basic Operations</div>
+            <div class="queries-grid">
+                <div class="query-btn" onclick="useQuery('list all products')">
+                    <code>list all products</code>
+                </div>
+                <div class="query-btn" onclick="useQuery('show products in Electronics category')">
+                    <code>show Electronics products</code>
+                </div>
+                <div class="query-btn" onclick="useQuery('get product 1')">
+                    <code>get product by ID</code>
+                </div>
+                <div class="query-btn" onclick="useQuery('add product: Webcam, price: 89.99, category: Electronics')">
+                    <code>add new product</code>
                 </div>
             </div>
-
-            <div class="query-interface">
-                <div class="input-group">
-                    <label for="queryInput">Enter your query:</label>
-                    <input 
-                        type="text" 
-                        id="queryInput" 
-                        class="query-input" 
-                        placeholder="e.g., list all products"
-                        onkeypress="handleEnter(event)"
-                    >
+            <div class="category">Search & Filter</div>
+            <div class="queries-grid">
+                <div class="query-btn" onclick="useQuery('search for laptop')">
+                    <code>search products by name</code>
                 </div>
-                <button class="btn-submit" onclick="submitQuery()" id="submitBtn">
-                    Send Query
-                </button>
-
-                <div class="response-section" id="responseSection">
-                    <div class="response-header">Response:</div>
-                    <div class="response-content" id="responseContent"></div>
+                <div class="query-btn" onclick="useQuery('find products between 50 and 500')">
+                    <code>products in price range</code>
                 </div>
             </div>
         </div>
 
-        <!-- Database Tab -->
-        <div id="database-tab" class="tab-content">
-            <div class="table-container">
-                <div class="table-header">
-                    <h2>📦 Products Table</h2>
-                    <button class="btn-refresh" onclick="loadDatabaseData()">🔄 Refresh</button>
+        <!-- Order Queries -->
+        <div class="section">
+            <h2>🛒 Order Queries</h2>
+            <div class="category">Create & Manage</div>
+            <div class="queries-grid">
+                <div class="query-btn" onclick="useQuery('order product 1 quantity 2')">
+                    <code>create order</code>
                 </div>
-                <div id="productsTable">
-                    <div class="loading">Loading products...</div>
+                <div class="query-btn" onclick="useQuery('list all orders')">
+                    <code>list all orders</code>
                 </div>
-            </div>
-
-            <div class="table-container">
-                <div class="table-header">
-                    <h2>📋 Orders Table</h2>
+                <div class="query-btn" onclick="useQuery('list pending orders')">
+                    <code>show pending orders</code>
                 </div>
-                <div id="ordersTable">
-                    <div class="loading">Loading orders...</div>
+                <div class="query-btn" onclick="useQuery('get order summary 1')">
+                    <code>order details</code>
                 </div>
             </div>
         </div>
 
-        <!-- Info Tab -->
-        <div id="info-tab" class="tab-content">
-            <div class="info-section">
-                <h2>ℹ️ About This Service</h2>
-                <p>AI-powered product and order management system with natural language processing capabilities.</p>
+        <!-- Examples -->
+        <div class="section">
+            <h2>💡 More Examples</h2>
+            <div class="queries-grid">
+                <div class="query-btn" onclick="useQuery('add product: Standing Desk, price: 599, category: Furniture')">
+                    <code>add Furniture item</code>
+                </div>
+                <div class="query-btn" onclick="useQuery('search for mouse')">
+                    <code>search for mouse</code>
+                </div>
+                <div class="query-btn" onclick="useQuery('list completed orders')">
+                    <code>completed orders</code>
+                </div>
+                <div class="query-btn" onclick="useQuery('show products in Accessories category')">
+                    <code>show Accessories</code>
+                </div>
+            </div>
+        </div>
 
-                <h2 style="margin-top: 20px;">🎯 Features</h2>
-                <p><strong>Product Management:</strong> List, add, update, delete products with statistics</p>
-                <p><strong>Order Processing:</strong> Create and track orders with automatic calculations</p>
-                <p><strong>AI Agent:</strong> Natural language understanding and intelligent routing</p>
-
-                <h2 style="margin-top: 20px;">🔧 Tech Stack</h2>
-                <p>FastAPI • LangGraph • SQLite • FastMCP • Python 3.11+</p>
+        <!-- Quick Guide -->
+        <div class="section">
+            <h2>📖 Quick Guide</h2>
+            <div style="line-height: 1.8; font-size: 0.9em; color: #b0b0b0;">
+                <p><strong style="color: #64ffda;">Product Commands:</strong></p>
+                <p>• List: <code style="color: #64ffda;">list all products</code> or <code style="color: #64ffda;">show Electronics</code></p>
+                <p>• Search: <code style="color: #64ffda;">search for laptop</code></p>
+                <p>• Add: <code style="color: #64ffda;">add product: Name, price: 99, category: Category</code></p>
+                <br>
+                <p><strong style="color: #64ffda;">Order Commands:</strong></p>
+                <p>• Create: <code style="color: #64ffda;">order product 1 quantity 2</code></p>
+                <p>• List: <code style="color: #64ffda;">list all orders</code> or <code style="color: #64ffda;">list pending orders</code></p>
+                <p>• Details: <code style="color: #64ffda;">get order summary 1</code></p>
             </div>
         </div>
     </div>
@@ -429,117 +278,47 @@
     <script>
         const API_BASE = window.location.origin;
 
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`${tabName}-tab`).classList.add('active');
-            event.target.classList.add('active');
-            if (tabName === 'database') loadDatabaseData();
-        }
-
         function useQuery(query) {
             document.getElementById('queryInput').value = query;
             submitQuery();
         }
 
-        function handleEnter(event) {
-            if (event.key === 'Enter') submitQuery();
-        }
-
         async function submitQuery() {
             const input = document.getElementById('queryInput');
             const query = input.value.trim();
-            if (!query) return alert('Please enter a query');
+            if (!query) return;
 
-            const submitBtn = document.getElementById('submitBtn');
-            const responseSection = document.getElementById('responseSection');
-            const responseContent = document.getElementById('responseContent');
+            const btn = document.getElementById('submitBtn');
+            const response = document.getElementById('response');
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Processing...';
-            responseSection.classList.add('show');
-            responseContent.textContent = 'Processing your query...';
+            btn.disabled = true;
+            btn.textContent = 'Processing...';
+            response.classList.add('show');
+            response.classList.remove('error');
+            response.textContent = 'Processing your query...';
 
             try {
-                const response = await fetch(`${API_BASE}/api/v1/agent/query`, {
+                const res = await fetch(`${API_BASE}/api/v1/agent/query`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ query })
                 });
-                const data = await response.json();
-                responseContent.textContent = response.ok ? (data.response || 'No response') : `Error: ${data.detail}`;
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    response.textContent = data.response || 'No response received';
+                } else {
+                    response.classList.add('error');
+                    response.textContent = `Error: ${data.detail || 'Unknown error'}`;
+                }
             } catch (error) {
-                responseContent.textContent = `Error: ${error.message}`;
+                response.classList.add('error');
+                response.textContent = `Error: ${error.message}`;
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Send Query';
+                btn.disabled = false;
+                btn.textContent = 'Send Query';
             }
-        }
-
-        async function loadDatabaseData() {
-            await loadProducts();
-            await loadOrders();
-        }
-
-        async function loadProducts() {
-            const container = document.getElementById('productsTable');
-            container.innerHTML = '<div class="loading">Loading products...</div>';
-            
-            const mockProducts = [
-                { id: 1, name: 'Gaming Laptop', price: 1299.99, category: 'Electronics', in_stock: true },
-                { id: 2, name: 'Wireless Mouse', price: 49.99, category: 'Electronics', in_stock: true },
-                { id: 3, name: 'Mechanical Keyboard', price: 129.99, category: 'Electronics', in_stock: true },
-                { id: 4, name: '4K Monitor', price: 399.99, category: 'Electronics', in_stock: true },
-                { id: 5, name: 'USB-C Hub', price: 69.99, category: 'Accessories', in_stock: false }
-            ];
-            
-            container.innerHTML = `
-                <table>
-                    <thead>
-                        <tr><th>ID</th><th>Name</th><th>Price</th><th>Category</th><th>Status</th></tr>
-                    </thead>
-                    <tbody>
-                        ${mockProducts.map(p => `
-                            <tr>
-                                <td>${p.id}</td>
-                                <td>${p.name}</td>
-                                <td>$${p.price.toFixed(2)}</td>
-                                <td>${p.category}</td>
-                                <td><span class="badge ${p.in_stock ? 'in-stock' : 'out-stock'}">
-                                    ${p.in_stock ? 'In Stock' : 'Out of Stock'}
-                                </span></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            `;
-        }
-
-        async function loadOrders() {
-            const container = document.getElementById('ordersTable');
-            const mockOrders = [
-                { id: 101, product_name: 'Gaming Laptop', quantity: 1, total_price: 1299.99, status: 'pending' },
-                { id: 102, product_name: 'Wireless Mouse', quantity: 2, total_price: 99.98, status: 'completed' }
-            ];
-            
-            container.innerHTML = mockOrders.length ? `
-                <table>
-                    <thead>
-                        <tr><th>Order ID</th><th>Product</th><th>Quantity</th><th>Total</th><th>Status</th></tr>
-                    </thead>
-                    <tbody>
-                        ${mockOrders.map(o => `
-                            <tr>
-                                <td>#${o.id}</td>
-                                <td>${o.product_name}</td>
-                                <td>${o.quantity}</td>
-                                <td>$${o.total_price.toFixed(2)}</td>
-                                <td><span class="badge ${o.status}">${o.status}</span></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-            ` : '<p style="color: #a0a0a0; text-align: center; padding: 20px;">No orders yet</p>';
         }
     </script>
 </body>
