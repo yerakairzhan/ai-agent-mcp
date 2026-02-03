@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  ai-agent-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-agent-mcp-api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Persist database
+      - ./data:/app/data
+      - ./tools.py:/app/tools.py
+      - ./tool_executor.py:/app/tool_executor.py
+      - ./mock_llm.py:/app/mock_llm.py
+      - ./langgraph_agent.py:/app/langgraph_agent.py
+      - ./database.py:/app/database.py
+      - ./api:/app/api
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=sqlite:////app/data/products.db
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
