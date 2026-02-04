@@ -108,11 +108,54 @@ class MockLLM:
                 parsed["source"] = "mcp"
                 return parsed
 
+        # UPDATE PRODUCT
+        if self._is_update_product_query(user_input_lower):
+            parsed = self._parse_update_product(user_input)
+            if parsed:
+                parsed["source"] = "mcp"
+                return parsed
+
+        # DELETE PRODUCT
+        if self._is_delete_product_query(user_input_lower):
+            parsed = self._parse_delete_product(user_input_lower)
+            if parsed:
+                parsed["source"] = "mcp"
+                return parsed
+
+        # GET STATISTICS
+        if self._is_statistics_query(user_input_lower):
+            return {
+                "tool": "get_statistics" if "product" in user_input_lower else "get_order_statistics",
+                "arguments": {},
+                "source": "mcp"
+            }
+
+        # GET ORDER
+        if self._is_get_order_query(user_input_lower):
+            parsed = self._parse_get_order(user_input_lower)
+            if parsed:
+                parsed["source"] = "mcp"
+                return parsed
+
+        # UPDATE ORDER STATUS
+        if self._is_update_order_query(user_input_lower):
+            parsed = self._parse_update_order_status(user_input_lower)
+            if parsed:
+                parsed["source"] = "mcp"
+                return parsed
+
+        # CANCEL ORDER
+        if self._is_cancel_order_query(user_input_lower):
+            parsed = self._parse_cancel_order(user_input_lower)
+            if parsed:
+                parsed["source"] = "mcp"
+                return parsed
+
         logger.warning(f"Could not parse intent for: {user_input}")
         return {
             "tool": None,
             "arguments": {},
-            "error": "Could not parse intent. Try: 'list products', 'add product: Name, price: X, category: Y', 'order product 1 quantity 2'",
+            "error": "Could not parse intent. Try: 'list products', 'add product: Name, price: X, category: Y', 'order product 1 quantity 2', 'update product 1 price 999', 'delete product 1', 'get statistics'",
             "source": None
         }
 
@@ -140,6 +183,36 @@ class MockLLM:
         """Check if query is searching for products"""
         keywords = ["search", "find", "look for"]
         return any(kw in text for kw in keywords) and "product" in text
+
+    def _is_update_product_query(self, text: str) -> bool:
+        """Check if query is updating a product"""
+        keywords = ["update product", "change product", "modify product"]
+        return any(kw in text for kw in keywords)
+
+    def _is_delete_product_query(self, text: str) -> bool:
+        """Check if query is deleting a product"""
+        keywords = ["delete product", "remove product"]
+        return any(kw in text for kw in keywords)
+
+    def _is_statistics_query(self, text: str) -> bool:
+        """Check if query is asking for statistics"""
+        keywords = ["statistics", "stats", "summary"]
+        return any(kw in text for kw in keywords)
+
+    def _is_get_order_query(self, text: str) -> bool:
+        """Check if query is getting a specific order"""
+        keywords = ["get order", "show order", "find order"]
+        return any(kw in text for kw in keywords)
+
+    def _is_update_order_query(self, text: str) -> bool:
+        """Check if query is updating order status"""
+        keywords = ["update order", "change order status", "complete order"]
+        return any(kw in text for kw in keywords)
+
+    def _is_cancel_order_query(self, text: str) -> bool:
+        """Check if query is cancelling an order"""
+        keywords = ["cancel order"]
+        return any(kw in text for kw in keywords)
 
     def _extract_category(self, text: str) -> Optional[str]:
         """Extract category from text"""
@@ -236,6 +309,110 @@ class MockLLM:
 
         return None
 
+    def _parse_update_product(self, user_input: str) -> Optional[Dict[str, Any]]:
+        """Parse update product command"""
+        # "update product 1 price 999"
+        # "update product 1 name New Name"
+        # "update product 1 in_stock false"
+        product_match = re.search(r'product\s+(\d+)', user_input, re.IGNORECASE)
+        if not product_match:
+            return None
+
+        product_id = int(product_match.group(1))
+        arguments = {"product_id": product_id}
+
+        # Check for price update
+        price_match = re.search(r'price\s+(\d+\.?\d*)', user_input, re.IGNORECASE)
+        if price_match:
+            arguments["price"] = float(price_match.group(1))
+
+        # Check for name update
+        name_match = re.search(r'name\s+(.+?)(?:\s+(?:price|category|in_stock)|$)', user_input, re.IGNORECASE)
+        if name_match:
+            arguments["name"] = name_match.group(1).strip()
+
+        # Check for category update
+        category_match = re.search(r'category\s+(\w+)', user_input, re.IGNORECASE)
+        if category_match:
+            arguments["category"] = category_match.group(1)
+
+        # Check for stock status
+        if "in_stock true" in user_input.lower() or "in stock" in user_input.lower():
+            arguments["in_stock"] = True
+        elif "in_stock false" in user_input.lower() or "out of stock" in user_input.lower():
+            arguments["in_stock"] = False
+
+        if len(arguments) > 1:  # Has product_id + at least one update field
+            return {
+                "tool": "update_product",
+                "arguments": arguments
+            }
+
+        return None
+
+    def _parse_delete_product(self, text: str) -> Optional[Dict[str, Any]]:
+        """Parse delete product command"""
+        # "delete product 1"
+        product_match = re.search(r'product\s+(\d+)', text)
+        if product_match:
+            return {
+                "tool": "delete_product",
+                "arguments": {"product_id": int(product_match.group(1))}
+            }
+        return None
+
+    def _parse_get_order(self, text: str) -> Optional[Dict[str, Any]]:
+        """Parse get order command"""
+        # "get order 1" or "show order 5"
+        order_match = re.search(r'order\s+(\d+)', text)
+        if order_match:
+            return {
+                "tool": "get_order",
+                "arguments": {"order_id": int(order_match.group(1))}
+            }
+        return None
+
+    def _parse_update_order_status(self, text: str) -> Optional[Dict[str, Any]]:
+        """Parse update order status command"""
+        # "update order 1 status completed"
+        # "complete order 1"
+        order_match = re.search(r'order\s+(\d+)', text)
+        if not order_match:
+            return None
+
+        order_id = int(order_match.group(1))
+
+        # Determine status
+        status = None
+        if "completed" in text or "complete" in text:
+            status = "completed"
+        elif "pending" in text:
+            status = "pending"
+        elif "cancelled" in text or "cancel" in text:
+            status = "cancelled"
+
+        if status:
+            return {
+                "tool": "update_order_status",
+                "arguments": {
+                    "order_id": order_id,
+                    "status": status
+                }
+            }
+
+        return None
+
+    def _parse_cancel_order(self, text: str) -> Optional[Dict[str, Any]]:
+        """Parse cancel order command"""
+        # "cancel order 1"
+        order_match = re.search(r'order\s+(\d+)', text)
+        if order_match:
+            return {
+                "tool": "cancel_order",
+                "arguments": {"order_id": int(order_match.group(1))}
+            }
+        return None
+
     def invoke(self, user_input: str, tool_executor) -> str:
         """
         Main entry: parse intent (mock) → execute tool (REAL) → format (mock)
@@ -309,6 +486,49 @@ class MockLLM:
                 lines.append(
                     f"  • Order #{o['order_id']}: {o['product_name']} x{o['quantity']} = ${o['total_price']} ({o['status']})")
             return "\n".join(lines)
+
+        elif tool_name == "update_product":
+            return (f"✅ Product updated:\n"
+                   f"  • ID: {result['id']}\n"
+                   f"  • Name: {result['name']}\n"
+                   f"  • Price: ${result['price']}\n"
+                   f"  • Category: {result['category']}\n"
+                   f"  • In Stock: {result['in_stock']}")
+
+        elif tool_name == "delete_product":
+            return f"✅ Deleted product: {result['product_name']} (ID: {result['product_id']})"
+
+        elif tool_name == "get_statistics":
+            return (f"📊 Product Statistics:\n"
+                   f"  • Total Products: {result['total_count']}\n"
+                   f"  • Average Price: ${result['average_price']}\n"
+                   f"  • Categories: {', '.join(result['categories'])}\n"
+                   f"  • In Stock: {result['in_stock_count']}")
+
+        elif tool_name == "get_order":
+            return (f"📋 Order Details:\n"
+                   f"  • Order ID: {result['order_id']}\n"
+                   f"  • Product: {result['product_name']}\n"
+                   f"  • Quantity: {result['quantity']}\n"
+                   f"  • Total: ${result['total_price']}\n"
+                   f"  • Status: {result['status']}")
+
+        elif tool_name == "update_order_status":
+            return (f"✅ Order status updated:\n"
+                   f"  • Order ID: {result['order_id']}\n"
+                   f"  • Product: {result['product_name']}\n"
+                   f"  • New Status: {result['status']}")
+
+        elif tool_name == "cancel_order":
+            return f"✅ {result['message']}"
+
+        elif tool_name == "get_order_statistics":
+            return (f"📊 Order Statistics:\n"
+                   f"  • Total Orders: {result['total_orders']}\n"
+                   f"  • Pending: {result['pending_orders']}\n"
+                   f"  • Completed: {result['completed_orders']}\n"
+                   f"  • Cancelled: {result['cancelled_orders']}\n"
+                   f"  • Total Revenue: ${result['total_revenue']}")
 
         elif tool_name == "search_products_by_name":
             if not result:

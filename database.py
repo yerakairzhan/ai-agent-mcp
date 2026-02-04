@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 
 # Database URL - use environment variable in Docker
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./products.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:////app/data/products.db")
 
 # Create engine
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})

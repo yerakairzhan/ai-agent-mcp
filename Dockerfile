@@ -28,5 +28,5 @@ ENV PYTHONPATH=/app
 # Expose port
 EXPOSE 8000
 
-# Initialize database and start server
-CMD ["sh", "-c", "python database.py && uvicorn api.main:app --host 0.0.0.0 --port 8000"]
+# Initialize database with migrations and start server
+CMD ["sh", "-c", "python migrate.py init && python database.py && uvicorn api.main:app --host 0.0.0.0 --port 8000"]

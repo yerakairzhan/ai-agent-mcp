@@ -12,140 +12,142 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e0e0e0;
-            min-height: 100vh;
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #fff;
             padding: 20px;
+            line-height: 1.6;
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
         header {
             text-align: center;
-            padding: 25px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            margin-bottom: 25px;
+            padding: 20px;
+            border-bottom: 2px solid #333;
+            margin-bottom: 30px;
         }
 
         h1 {
-            color: #64ffda;
-            font-size: 2em;
-            margin-bottom: 8px;
+            font-size: 1.8em;
+            color: #fff;
+            margin-bottom: 5px;
         }
 
         .subtitle {
-            color: #a0a0a0;
-            font-size: 0.95em;
-        }
-
-        .section {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .section h2 {
-            color: #64ffda;
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .queries-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .query-btn {
-            background: rgba(100, 255, 218, 0.1);
-            padding: 10px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid rgba(100, 255, 218, 0.3);
-            text-align: left;
+            color: #888;
             font-size: 0.9em;
         }
 
-        .query-btn:hover {
-            background: rgba(100, 255, 218, 0.2);
-            transform: translateX(3px);
-        }
-
-        .query-btn code {
-            color: #64ffda;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85em;
-        }
-
-        .query-interface {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 25px;
-            border-radius: 12px;
+        .service-section {
+            background: #111;
+            border: 1px solid #333;
+            padding: 20px;
             margin-bottom: 20px;
         }
 
-        .query-input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(100, 255, 218, 0.3);
-            border-radius: 8px;
-            color: #e0e0e0;
-            font-size: 0.95em;
-            font-family: 'Courier New', monospace;
-            margin-bottom: 12px;
+        .service-section h2 {
+            color: #fff;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
         }
 
-        .query-input:focus {
-            outline: none;
-            border-color: #64ffda;
+        .tool-list {
+            display: grid;
+            gap: 8px;
         }
 
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #64ffda 0%, #4ecdc4 100%);
-            border: none;
-            border-radius: 8px;
-            color: #1a1a2e;
+        .tool-item {
+            background: #222;
+            padding: 10px 15px;
+            border-left: 3px solid #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9em;
+        }
+
+        .tool-item:hover {
+            background: #333;
+            border-left-color: #fff;
+        }
+
+        .tool-name {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .tool-desc {
+            color: #888;
+            font-size: 0.85em;
+            margin-top: 3px;
+        }
+
+        .query-box {
+            background: #111;
+            border: 1px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .query-box h3 {
+            color: #fff;
             font-size: 1em;
-            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #666;
+        }
+
+        button {
+            width: 100%;
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            font-weight: bold;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.4);
+        button:hover {
+            background: #ddd;
         }
 
-        .btn-submit:disabled {
-            opacity: 0.5;
+        button:disabled {
+            background: #333;
+            color: #666;
             cursor: not-allowed;
         }
 
         .response {
-            background: rgba(0, 0, 0, 0.3);
+            background: #000;
+            border: 1px solid #333;
             padding: 15px;
-            border-radius: 8px;
-            border-left: 3px solid #64ffda;
             margin-top: 15px;
             display: none;
             white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9em;
-            line-height: 1.5;
+            font-size: 0.85em;
+            color: #ccc;
         }
 
         .response.show {
@@ -153,171 +155,149 @@
         }
 
         .response.error {
-            border-left-color: #f44336;
-            color: #ff5252;
-        }
-
-        .category {
-            font-size: 0.85em;
+            border-color: #666;
             color: #888;
-            margin-bottom: 8px;
         }
 
-        @media (max-width: 768px) {
-            .queries-grid {
-                grid-template-columns: 1fr;
-            }
+        code {
+            color: #aaa;
+        }
+
+        .divider {
+            height: 1px;
+            background: #333;
+            margin: 30px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🤖 AI Agent MCP</h1>
-            <p class="subtitle">Natural Language Product & Order Management</p>
+            <h1>AI AGENT MCP</h1>
+            <p class="subtitle">Model Context Protocol Interface</p>
         </header>
 
-        <!-- Query Interface -->
-        <div class="query-interface">
+        <!-- Query Input -->
+        <div class="query-box">
+            <h3>QUERY</h3>
             <input
                 type="text"
                 id="queryInput"
-                class="query-input"
-                placeholder="Type your query or click a sample below..."
-                onkeypress="if(event.key==='Enter') submitQuery()"
+                placeholder="Enter your query..."
+                onkeypress="if(event.key==='Enter') submit()"
             >
-            <button class="btn-submit" onclick="submitQuery()" id="submitBtn">Send Query</button>
+            <button onclick="submit()" id="submitBtn">EXECUTE</button>
             <div class="response" id="response"></div>
         </div>
 
-        <!-- Product Queries -->
-        <div class="section">
-            <h2>📦 Product Queries</h2>
-            <div class="category">Basic Operations</div>
-            <div class="queries-grid">
-                <div class="query-btn" onclick="useQuery('list all products')">
-                    <code>list all products</code>
+        <!-- MCP Server -->
+        <div class="service-section">
+            <h2>MCP SERVER</h2>
+            <div class="tool-list">
+                <div class="tool-item" onclick="useQuery('list all products')">
+                    <div class="tool-name">list_products</div>
+                    <div class="tool-desc">Get all products or filter by category</div>
                 </div>
-                <div class="query-btn" onclick="useQuery('show products in Electronics category')">
-                    <code>show Electronics products</code>
+                <div class="tool-item" onclick="useQuery('get product 1')">
+                    <div class="tool-name">get_product</div>
+                    <div class="tool-desc">Get product by ID</div>
                 </div>
-                <div class="query-btn" onclick="useQuery('get product 1')">
-                    <code>get product by ID</code>
+                <div class="tool-item" onclick="useQuery('add product: Mouse Pad, price: 15.99, category: Accessories')">
+                    <div class="tool-name">add_product</div>
+                    <div class="tool-desc">Add new product to inventory</div>
                 </div>
-                <div class="query-btn" onclick="useQuery('add product: Webcam, price: 89.99, category: Electronics')">
-                    <code>add new product</code>
+                <div class="tool-item" onclick="useQuery('update product 1 price 1199.99')">
+                    <div class="tool-name">update_product</div>
+                    <div class="tool-desc">Update product details</div>
                 </div>
-            </div>
-            <div class="category">Search & Filter</div>
-            <div class="queries-grid">
-                <div class="query-btn" onclick="useQuery('search for laptop')">
-                    <code>search products by name</code>
+                <div class="tool-item" onclick="useQuery('delete product 5')">
+                    <div class="tool-name">delete_product</div>
+                    <div class="tool-desc">Remove product from inventory</div>
                 </div>
-                <div class="query-btn" onclick="useQuery('find products between 50 and 500')">
-                    <code>products in price range</code>
-                </div>
-            </div>
-        </div>
-
-        <!-- Order Queries -->
-        <div class="section">
-            <h2>🛒 Order Queries</h2>
-            <div class="category">Create & Manage</div>
-            <div class="queries-grid">
-                <div class="query-btn" onclick="useQuery('order product 1 quantity 2')">
-                    <code>create order</code>
-                </div>
-                <div class="query-btn" onclick="useQuery('list all orders')">
-                    <code>list all orders</code>
-                </div>
-                <div class="query-btn" onclick="useQuery('list pending orders')">
-                    <code>show pending orders</code>
-                </div>
-                <div class="query-btn" onclick="useQuery('get order summary 1')">
-                    <code>order details</code>
+                <div class="tool-item" onclick="useQuery('get statistics')">
+                    <div class="tool-name">get_statistics</div>
+                    <div class="tool-desc">Calculate product statistics</div>
                 </div>
             </div>
         </div>
 
-        <!-- Examples -->
-        <div class="section">
-            <h2>💡 More Examples</h2>
-            <div class="queries-grid">
-                <div class="query-btn" onclick="useQuery('add product: Standing Desk, price: 599, category: Furniture')">
-                    <code>add Furniture item</code>
-                </div>
-                <div class="query-btn" onclick="useQuery('search for mouse')">
-                    <code>search for mouse</code>
-                </div>
-                <div class="query-btn" onclick="useQuery('list completed orders')">
-                    <code>completed orders</code>
-                </div>
-                <div class="query-btn" onclick="useQuery('show products in Accessories category')">
-                    <code>show Accessories</code>
-                </div>
-            </div>
-        </div>
+        <div class="divider"></div>
 
-        <!-- Quick Guide -->
-        <div class="section">
-            <h2>📖 Quick Guide</h2>
-            <div style="line-height: 1.8; font-size: 0.9em; color: #b0b0b0;">
-                <p><strong style="color: #64ffda;">Product Commands:</strong></p>
-                <p>• List: <code style="color: #64ffda;">list all products</code> or <code style="color: #64ffda;">show Electronics</code></p>
-                <p>• Search: <code style="color: #64ffda;">search for laptop</code></p>
-                <p>• Add: <code style="color: #64ffda;">add product: Name, price: 99, category: Category</code></p>
-                <br>
-                <p><strong style="color: #64ffda;">Order Commands:</strong></p>
-                <p>• Create: <code style="color: #64ffda;">order product 1 quantity 2</code></p>
-                <p>• List: <code style="color: #64ffda;">list all orders</code> or <code style="color: #64ffda;">list pending orders</code></p>
-                <p>• Details: <code style="color: #64ffda;">get order summary 1</code></p>
+        <!-- Order Service -->
+        <div class="service-section">
+            <h2>ORDER SERVICE</h2>
+            <div class="tool-list">
+                <div class="tool-item" onclick="useQuery('create order for product 1 quantity 2')">
+                    <div class="tool-name">create_order</div>
+                    <div class="tool-desc">Create new order</div>
+                </div>
+                <div class="tool-item" onclick="useQuery('get order 1')">
+                    <div class="tool-name">get_order</div>
+                    <div class="tool-desc">Get order details by ID</div>
+                </div>
+                <div class="tool-item" onclick="useQuery('list all orders')">
+                    <div class="tool-name">list_orders</div>
+                    <div class="tool-desc">List all orders or filter by status</div>
+                </div>
+                <div class="tool-item" onclick="useQuery('update order 1 status completed')">
+                    <div class="tool-name">update_order_status</div>
+                    <div class="tool-desc">Change order status</div>
+                </div>
+                <div class="tool-item" onclick="useQuery('cancel order 1')">
+                    <div class="tool-name">cancel_order</div>
+                    <div class="tool-desc">Cancel pending order</div>
+                </div>
+                <div class="tool-item" onclick="useQuery('get order statistics')">
+                    <div class="tool-name">get_order_statistics</div>
+                    <div class="tool-desc">Get order analytics</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        const API_BASE = window.location.origin;
+        const API = window.location.origin;
 
         function useQuery(query) {
             document.getElementById('queryInput').value = query;
-            submitQuery();
+            submit();
         }
 
-        async function submitQuery() {
+        async function submit() {
             const input = document.getElementById('queryInput');
             const query = input.value.trim();
             if (!query) return;
 
             const btn = document.getElementById('submitBtn');
-            const response = document.getElementById('response');
+            const res = document.getElementById('response');
 
             btn.disabled = true;
-            btn.textContent = 'Processing...';
-            response.classList.add('show');
-            response.classList.remove('error');
-            response.textContent = 'Processing your query...';
+            btn.textContent = 'PROCESSING...';
+            res.classList.add('show');
+            res.classList.remove('error');
+            res.textContent = 'Processing...';
 
             try {
-                const res = await fetch(`${API_BASE}/api/v1/agent/query`, {
+                const response = await fetch(`${API}/api/v1/agent/query`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ query })
                 });
 
-                const data = await res.json();
+                const data = await response.json();
 
-                if (res.ok) {
-                    response.textContent = data.response || 'No response received';
+                if (response.ok) {
+                    res.textContent = data.response || 'No response';
                 } else {
-                    response.classList.add('error');
-                    response.textContent = `Error: ${data.detail || 'Unknown error'}`;
+                    res.classList.add('error');
+                    res.textContent = `ERROR: ${data.detail || 'Unknown error'}`;
                 }
             } catch (error) {
-                response.classList.add('error');
-                response.textContent = `Error: ${error.message}`;
+                res.classList.add('error');
+                res.textContent = `ERROR: ${error.message}`;
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Send Query';
+                btn.textContent = 'EXECUTE';
             }
         }
     </script>
