@@ -1,369 +1,308 @@
-# 🤖 AI Agent MCP - Documentation / Документация
+# 🤖 AI Agent MCP Project
 
-[English](#english) | [Русский](#russian)
+> **Production-ready AI agent system with FastMCP, LangGraph, Alembic migrations, and Web UI**
+
+![Python](https://img.shields.io/badge/python-3.11-blue.svg)
 
 ---
 
-<a name="english"></a>
-## 🇬🇧 
+## 🚀 Quick Start
 
-### 📋 What is this?
-
-An AI agent system that manages products and orders using natural language queries. Built with FastAPI, LangGraph, and SQLite.
-
-### 🚀 Quick Start
-
-**Option 1: Docker (Recommended)**
 ```bash
 # Start everything
 docker-compose up --build
 
-# Visit
+# Open browser
 http://localhost:8000
 ```
 
-**Option 2: Local**
+**That's it!** The web UI, API, and database are all ready.
+
+---
+
+## 🌐 Web Interface
+
+Access the **terminal-style UI** at the root URL (`http://localhost:8000`)
+
+### Features
+- ⚡ Real-time agent queries
+- 🛠️ Click-to-use tool catalog
+- 📊 12 MCP tools available
+- 🎨 Retro terminal aesthetic
+
+### Example Queries
+
+**Product Management:**
+```
+list all products
+add product: Mouse Pad, price: 15.99, category: Accessories
+update product 1 price 999
+delete product 5
+get statistics
+```
+
+**Order Management:**
+```
+order product 1 quantity 2
+list all orders
+update order 1 status completed
+cancel order 1
+get order statistics
+```
+
+---
+
+## 🗄️ Database Migrations
+
+Full **Alembic** integration for schema management.
+
+### Quick Commands
+
 ```bash
-# Install dependencies
-pip install -r requirements.txt
+# Check current version
+docker exec -it ai-agent-mcp-api python migrate.py current
 
-# Initialize database
-python database.py
+# Apply migrations
+docker exec -it ai-agent-mcp-api python migrate.py upgrade
 
-# Run server
-uvicorn api.main:app --reload
+# Create new migration
+docker exec -it ai-agent-mcp-api python migrate.py create "add field"
 
-# Visit
-http://localhost:8000
+# View history
+docker exec -it ai-agent-mcp-api python migrate.py history
 ```
 
-### 📂 Project Structure
+### Adding a New Field
+
+**1. Edit `database.py`:**
+```python
+class Product(Base):
+    # ... existing fields ...
+    description = Column(String, nullable=True)  # NEW
+```
+
+**2. Create migration:**
+```bash
+docker exec -it ai-agent-mcp-api python migrate.py create "add description"
+```
+
+**3. Apply:**
+```bash
+docker exec -it ai-agent-mcp-api python migrate.py upgrade
+```
+
+📖 **Full Guide**: [MIGRATIONS.md](MIGRATIONS.md)
+
+---
+
+## 🏗️ Architecture
 
 ```
-├── frontend/           # Web interface
-│   └── index.html     # Single-page UI
-├── api/               # REST API
-│   └── main.py        # FastAPI endpoints
-├── agent/             # AI Agent
-│   ├── langgraph_agent.py  # Main agent
-│   ├── mock_llm.py         # Intent parser
-│   ├── tool_executor.py    # Tool runner
-│   ├── tools.py            # MCP tools
+Web Browser (http://localhost:8000)
+         │
+         ▼
+    FastAPI Server
+    • Serves HTML UI at /
+    • API at /api/v1/agent/query
+         │
+         ▼
+   LangGraph Agent
+   • MockLLM (intent parsing)
+   • Tool executor
+         │
+    ┌────┴────┐
+    ▼         ▼
+MCP Product   MCP Order
+Server        Server
+(6 tools)     (6 tools)
+    │         │
+    └────┬────┘
+         ▼
+   SQLAlchemy ORM
+         │
+         ▼
+  Alembic Migrations
+         │
+         ▼
+   SQLite Database
+   (/app/data/)
+```
+
+---
+
+## 📡 API Usage
+
+### Health Check
+```bash
+curl http://localhost:8000/health
+```
+
+### Agent Query
+```bash
+curl -X POST http://localhost:8000/api/v1/agent/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "list all products"}'
+```
+
+### All Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | Web UI interface |
+| `/health` | GET | Health check |
+| `/api/v1/agent/query` | POST | Agent queries |
+| `/docs` | GET | API documentation |
+
+---
+
+## 🛠️ MCP Tools (12 Total)
+
+### Product Server (6 Tools)
+- `list_products` - List all or filter by category
+- `get_product` - Get product by ID
+- `add_product` - Add new product
+- `update_product` - Update product fields
+- `delete_product` - Delete product
+- `get_statistics` - Product statistics
+
+### Order Server (6 Tools)
+- `create_order` - Create new order
+- `get_order` - Get order by ID
+- `list_orders` - List all or filter by status
+- `update_order_status` - Update status
+- `cancel_order` - Cancel order
+- `get_order_statistics` - Order statistics
+
+### Custom Agent Tools (3 Tools)
+- `search_products_by_name` - Search by name
+
+**Total: 13 tools** (12 MCP + 1 Custom)
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run all tests (9 total)
+pytest tests/ -v
+
+# Run in Docker
+docker exec -it ai-agent-mcp-api pytest tests/ -v
+
+# With coverage
+pytest tests/ --cov=. --cov-report=html
+```
+
+**Test Coverage:**
+- 3 API tests
+- 6 Tool execution tests
+- 3 Database tests
+
+---
+
+## 📁 Project Structure
+
+```
+ai-agent-project/
+├── api/
+│   └── main.py             # FastAPI app
+├── frontend/
+│   └── index.html          # Web UI ⭐
+├── agent/
+│   ├── langgraph_agent.py  # LangGraph workflow
+│   ├── mock_llm.py         # Intent parsing
+│   ├── tool_executor.py    # Tool execution
+│   ├── tools.py            # MCP implementations
 │   └── custom_tools.py     # Custom tools
-├── mcp_server/        # MCP Servers
-│   ├── main_server.py      # Product server
-│   └── order_server.py     # Order server
-├── migrations/        # Database migrations
-├── tests/            # Unit tests
-├── database.py       # SQLAlchemy models
-└── products.db       # SQLite database
+├── mcp_servers/
+│   ├── product_server.py   # Product MCP (6 tools)
+│   └── order_server.py     # Order MCP (6 tools)
+├── alembic/                # Migrations ⭐
+│   ├── versions/
+│   │   └── 001_initial_migration.py
+│   │  
+│   ├── env.py
+│   └── script.py.mako
+├── tests/
+│   └── test_all.py       # 9 tests
+├── database.py             # SQLAlchemy models
+├── migrate.py              # Migration CLI ⭐
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+└── README.md           # This file
 ```
 
-### 💬 Example Queries
+---
 
-**Products:**
-- `list all products`
-- `show products in Electronics category`
-- `add product: Webcam, price: 89.99, category: Electronics`
-- `search for laptop`
+## 💻 Development
 
-**Orders:**
-- `order product 1 quantity 2`
-- `list all pending orders`
-- `get order summary 1`
-
-### 🛠️ Features
-
-- ✅ Natural language processing
-- ✅ Product management (CRUD)
-- ✅ Order processing
-- ✅ SQLite database
-- ✅ REST API
-- ✅ Web interface
-- ✅ Docker support
-
-### 📡 API Endpoints
-
-**Main endpoint:**
-```
-POST /api/v1/agent/query
-Content-Type: application/json
-
-{
-  "query": "list all products"
-}
-```
-
-**Health check:**
-```
-GET /health
-```
-
-### 🧪 Testing
-
+### Local Setup
 ```bash
-# Run all tests
-pytest tests/test_all.py -v
-
-# 12 tests covering:
-# - MCP server tools
-# - Agent functionality
-# - API endpoints
-# - Integration
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python migrate.py init
+uvicorn api.main:app --reload
 ```
 
-### 📊 Database
-
-**Tables:**
-- `products` - Product catalog
-- `orders` - Customer orders
-
-**Access database:**
+### Docker Development
 ```bash
-# View database
-sqlite3 products.db
-
-# Show tables
-.tables
-
-# Query products
-SELECT * FROM products;
-```
-
-### 🐳 Docker
-
-**Commands:**
-```bash
-# Start
-docker-compose up
-
-# Stop
-docker-compose down
-
 # Rebuild
 docker-compose up --build
 
 # View logs
 docker-compose logs -f
-```
 
-### ❓ Troubleshooting
+# Access container
+docker exec -it ai-agent-mcp-api bash
 
-**Problem: Port 8000 in use**
-```bash
-# Change port in docker-compose.yml
-ports:
-  - "8001:8000"
-```
-
-**Problem: Database locked**
-```bash
-# Delete and reinitialize
-rm products.db
-python database.py
-```
-
-### 📝 Tech Stack
-
-- Python 3.11+
-- FastAPI
-- LangGraph
-- SQLAlchemy
-- SQLite
-- FastMCP
-
----
-
-<a name="russian"></a>
-## 🇷🇺 
-
-### 📋 Что это?
-
-AI-агент для управления продуктами и заказами через естественный язык. Построен на FastAPI, LangGraph и SQLite.
-
-### 🚀 Быстрый старт
-
-**Вариант 1: Docker (рекомендуется)**
-```bash
-# Запустить всё
-docker-compose up --build
-
-# Открыть
-http://localhost:8000
-```
-
-**Вариант 2: Локально**
-```bash
-# Установить зависимости
-pip install -r requirements.txt
-
-# Инициализировать базу данных
-python database.py
-
-# Запустить сервер
-uvicorn api.main:app --reload
-
-# Открыть
-http://localhost:8000
-```
-
-### 📂 Структура проекта
-
-```
-├── frontend/           # Веб-интерфейс
-│   └── index.html     # Одностраничный UI
-├── api/               # REST API
-│   └── main.py        # FastAPI endpoints
-├── agent/             # AI Агент
-│   ├── langgraph_agent.py  # Основной агент
-│   ├── mock_llm.py         # Парсер намерений
-│   ├── tool_executor.py    # Исполнитель инструментов
-│   ├── tools.py            # MCP инструменты
-│   └── custom_tools.py     # Кастомные инструменты
-├── mcp_server/        # MCP Серверы
-│   ├── main_server.py      # Сервер продуктов
-│   └── order_server.py     # Сервер заказов
-├── migrations/        # Миграции БД
-├── tests/            # Тесты
-├── database.py       # SQLAlchemy модели
-└── products.db       # SQLite база данных
-```
-
-### 💬 Примеры запросов
-
-**Продукты:**
-- `list all products` - показать все продукты
-- `show products in Electronics category` - показать электронику
-- `add product: Webcam, price: 89.99, category: Electronics` - добавить товар
-- `search for laptop` - найти ноутбук
-
-**Заказы:**
-- `order product 1 quantity 2` - заказать товар
-- `list all pending orders` - показать ожидающие заказы
-- `get order summary 1` - детали заказа
-
-### 🛠️ Возможности
-
-- ✅ Обработка естественного языка
-- ✅ Управление продуктами (CRUD)
-- ✅ Обработка заказов
-- ✅ База данных SQLite
-- ✅ REST API
-- ✅ Веб-интерфейс
-- ✅ Поддержка Docker
-
-### 📡 API Endpoints
-
-**Основной endpoint:**
-```
-POST /api/v1/agent/query
-Content-Type: application/json
-
-{
-  "query": "list all products"
-}
-```
-
-**Проверка здоровья:**
-```
-GET /health
-```
-
-### 🧪 Тестирование
-
-```bash
-# Запустить все тесты
-pytest tests/test_all.py -v
-
-# 12 тестов покрывают:
-# - Инструменты MCP сервера
-# - Функциональность агента
-# - API endpoints
-# - Интеграцию
-```
-
-### 📊 База данных
-
-**Таблицы:**
-- `products` - Каталог продуктов
-- `orders` - Заказы клиентов
-
-**Доступ к БД:**
-```bash
-# Просмотр базы данных
-sqlite3 products.db
-
-# Показать таблицы
-.tables
-
-# Запрос продуктов
-SELECT * FROM products;
-```
-
-### 🐳 Docker
-
-**Команды:**
-```bash
-# Запустить
-docker-compose up
-
-# Остановить
+# Stop
 docker-compose down
+```
 
-# Пересобрать
+## 🎯 Key Features
+
+1. **Web Interface** - Terminal-style UI for easy testing
+2. **Migrations** - Alembic for safe schema evolution
+3. **Dual MCP** - Separate Product & Order servers
+4. **Real DB** - All operations commit to SQLite
+5. **Docker Ready** - Single command deployment
+
+---
+
+## 🐛 Troubleshooting
+
+### Reset Everything
+```bash
+docker-compose down
+rm -rf data/
+docker-compose up --build
+```
+
+### Check Migrations
+```bash
+docker exec -it ai-agent-mcp-api python migrate.py current
+docker exec -it ai-agent-mcp-api python migrate.py history
+```
+
+### Access Database
+```bash
+docker exec -it ai-agent-mcp-api sqlite3 /app/data/products.db
+.tables
+.schema products
+.exit
+```
+
+## 🚀 Try It Now
+
+```bash
+# 1. Start
 docker-compose up --build
 
-# Логи
-docker-compose logs -f
+# 2. Open browser
+http://localhost:8000
+
+# 3. Try a query
+"list all products"
 ```
-
-### ❓ Решение проблем
-
-**Проблема: Порт 8000 занят**
-```bash
-# Изменить порт в docker-compose.yml
-ports:
-  - "8001:8000"
-```
-
-**Проблема: База данных заблокирована**
-```bash
-# Удалить и переинициализировать
-rm products.db
-python database.py
-```
-
-### 📝 Технологии
-
-- Python 3.11+
-- FastAPI
-- LangGraph
-- SQLAlchemy
-- SQLite
-- FastMCP
-
----
-
-## 🎯 Common Tasks / Общие задачи
-
-### Add a Product / Добавить продукт
-```bash
-curl -X POST http://localhost:8000/api/v1/agent/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "add product: Mouse, price: 25, category: Electronics"}'
-```
-
-### List Orders / Список заказов
-```bash
-curl -X POST http://localhost:8000/api/v1/agent/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "list all orders"}'
-```
-
-### Search Products / Поиск продуктов
-```bash
-curl -X POST http://localhost:8000/api/v1/agent/query \
-  -H "Content-Type: application/json" \
-  -d '{"query": "search for laptop"}'
-```
----
